@@ -1,0 +1,8 @@
+# Nimbus security contact — RFC 9116
+# PLACEHOLDER: confirm contact + expiry before publishing.
+
+Contact: mailto:security@nimbus.dev
+Expires: 2027-01-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://github.com/nimbus-agent/nimbus-security/blob/main/.well-known/security.txt
+Policy: https://github.com/nimbus-agent/nimbus-security/blob/main/SECURITY.md
