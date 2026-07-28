@@ -1,6 +1,6 @@
 # Nimbus Security Invariants & Non-Negotiables
 
-> This is a **summary** for external readers. The authoritative, always-current version (with full rationale, anti-patterns, and the wiring/test sites) is [`docs/SECURITY-INVARIANTS.md`](https://github.com/nimbus-agent/Nimbus/blob/main/docs/SECURITY-INVARIANTS.md) in the main repo. Current through **I27**; schema **V42**.
+> This is a **summary** for external readers. The authoritative, always-current version (with full rationale, anti-patterns, and the wiring/test sites) is [`docs/SECURITY-INVARIANTS.md`](https://github.com/nimbus-agent/Nimbus/blob/main/docs/SECURITY-INVARIANTS.md) in the main repo. Current through **I30**; schema **V44**.
 
 ## The seven non-negotiables
 
@@ -18,7 +18,9 @@ These are architectural constraints, not preferences:
 
 Every invariant ships as a triple in one commit: a **production wiring site**, a **docs entry**, and an **enforcement test** (`packages/gateway/src/security-invariants.test.ts`). Retiring a defense means deleting the row — never leaving drift. A static structural audit (`scripts/structure-audit/check-nimbus-invariants.ts`) enforces a subset before the test suite even runs.
 
-## The invariant catalogue (I1–I27)
+## The invariant catalogue (I1–I30)
+
+`I28` is intentionally absent: it is reserved for a defense on an unmerged branch, and the `I27`→`I29` gap is documented intent rather than drift.
 
 | ID | Guarantee (summary) | Production site |
 |----|---------------------|-----------------|
@@ -47,7 +49,9 @@ Every invariant ships as a triple in one commit: a **production wiring site**, a
 | I23 | ChatOps operational posts go only to a server-derived `ReplyTarget` (never caller-supplied) | `chatops/reply-dispatcher.ts` |
 | I24 | A federated preflight action runs only behind the LOCAL owner's HITL gate, sandboxed, config-resolved | `federation/preflight-gate.ts` |
 | I25 | Tribal-knowledge KB capture writes only to the config-pinned destination, behind local-owner HITL | `tribal/tribal-write-gate.ts` |
-| I26 | Warehouse/BI writes run only behind local HITL; a peer can never trigger a warehouse write (fail-closed) | `federation/invoke-gate.ts`, `connectors/warehouse-write-tools.ts` |
-| I27 | An outbound share leaves only through the share-gate: redaction + owner-approved preview + Vault-signed + audited, fail-closed | `share/share-gate.ts`, `share/share-keypair.ts` |
+| I26 | Connector writes (warehouse/BI ∪ GitOps/ML) run only behind local HITL; a peer can never trigger a connector write (fail-closed) | `federation/invoke-gate.ts`, `connectors/connector-write-registry.ts` |
+| I27 | An outbound share leaves only through the share-gate (origin) or forward-gate: redaction + owner-approved preview + Vault-signed + audited, fail-closed; a received share is inert | `share/share-gate.ts`, `share/share-forward.ts`, `share/share-keypair.ts` |
+| I29 | Egress-ledger completeness: every gated action appends one BLAKE3-chained `egress_ledger` row before dispatch (blocked row on deny; append failure aborts) | `engine/executor.ts`, `egress/*` |
+| I30 | Web-clipper token minting is fail-closed behind a live, single-use, owner-opened pairing window; minted tokens are Vault-stored and revocable | `clips/pairing-window.ts`, `clips/clip-token-store.ts` |
 
 For the rationale, anti-patterns, and the exact enforcement test behind each row, read the canonical [`docs/SECURITY-INVARIANTS.md`](https://github.com/nimbus-agent/Nimbus/blob/main/docs/SECURITY-INVARIANTS.md).
