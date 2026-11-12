@@ -26,8 +26,7 @@ the anti-patterns, the production wiring site and the enforcement test for each.
 
 This page used to carry a copy of that table. The copy went stale while the gateway kept adding
 defenses, which is the failure the triple rule exists to prevent, so it was removed on 2026-11-12.
-Nothing here states how many invariants there are or what the schema version is; read the
-canonical document for both.
+This page does not state how many invariants there are; the canonical document does.
 
 What the catalogue covers, by area:
 
